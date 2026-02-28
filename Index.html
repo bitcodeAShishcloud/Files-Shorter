@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure File Upload - Ashish Gupta</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4285f4;
+            --bg: #f4f6f8;
+            --text: #333;
+            --card-bg: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Settings Button */
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #555;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-top: 40px;
+        }
+
+        h2 { text-align: center; color: var(--primary); margin-bottom: 20px; }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button.submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button.submit-btn:hover { background-color: #3367d6; }
+        button.submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        /* Footer */
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .footer a { color: var(--primary); text-decoration: none; }
+        .security-msg { margin-top: 10px; font-style: italic; color: #28a745; }
+
+        /* Modal */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background-color: rgba(0,0,0,0.5); 
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+        }
+        .close { float: right; font-size: 24px; cursor: pointer; }
+
+        #status { margin-top: 10px; text-align: center; font-size: 14px; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+
+    <!-- Settings Button -->
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+
+    <div class="container">
+        <h2>📁 Secure File Upload</h2>
+        
+        <!-- Login Status -->
+        <div id="auth-status" style="text-align: center; margin-bottom: 15px;">
+            <button id="login-btn" onclick="handleAuthClick()">Sign in with Google</button>
+            <span id="user-name" style="display:none; color: green;">Logged in!</span>
+        </div>
+
+        <form id="uploadForm" onsubmit="handleUpload(event)">
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="pName" required placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label>Subject</label>
+                <select id="subjectSelect" onchange="checkOther(this)" required>
+                    <option value="" disabled selected>Select Subject</option>
+                    <option value="Hacking">Hacking</option>
+                    <option value="Ethical Hacking">Ethical Hacking</option>
+                    <option value="DBMS">DBMS</option>
+                    <option value="AICE">AICE</option>
+                    <option value="CTI">CTI</option>
+                    <option value="DSA">DSA</option>
+                    <option value="Web Technology">Web Technology</option>
+                    <option value="UPSC">UPSC</option>
+                    <option value="English">English</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Science">Science</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="Politics">Politics</option>
+                    <option value="Other">Other (Create New)</option>
+                </select>
+            </div>
+
+            <!-- Hidden input for custom subject -->
+            <div class="form-group" id="customSubjectDiv" style="display:none;">
+                <label>Enter New Subject Name</label>
+                <input type="text" id="customSubject" placeholder="e.g. Physics, Coding">
+            </div>
+
+            <div class="form-group">
+                <label>File Type</label>
+                <select id="fileType">
+                    <option value="application/pdf">PDF</option>
+                    <option value="application/vnd.ms-powerpoint">PPT</option>
+                    <option value="text/plain">TXT</option>
+                    <option value="application/msword">Word File</option>
+                    <option value="image/*">Image</option>
+                    <option value="video/*">Video</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Select File</label>
+                <input type="file" id="fileInput" required>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>Upload to Drive</button>
+        </form>
+        <div id="status"></div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettings()">&times;</span>
+            <h3>Settings</h3>
+            <div class="form-group">
+                <label>Google Drive Folder ID / URL</label>
+                <input type="text" id="driveFolderId" placeholder="Paste Folder URL or ID here">
+                <small style="color: #666;">Only the owner needs to set this.</small>
+            </div>
+            <button class="submit-btn" onclick="saveSettings()">Save Settings</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Page Owner: <strong>Ashish Gupta</strong> | <a href="https://github.com/bitcodeAShishcloud" target="_blank">GitHub Profile</a></p>
+        <p class="security-msg">🔒 Fully Secure: Your data is uploaded directly to your private Google Drive. It does not pass through any third-party server.</p>
+    </div>
+
+    <!-- Google API Script -->
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        // REPLACE THIS WITH YOUR CLIENT ID FROM GOOGLE CLOUD CONSOLE
+        const CLIENT_ID = '1073292672496-r70b2d6dj8rivtqard3t4g2th7g3ua58.apps.googleusercontent.com'; 
+        const API_KEY = 'YOUR_API_KEY_HERE'; // Optional but recommended
+        const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+        const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+        let tokenClient;
+        let gapiInited = false;
+        let gisInited = false;
+
+        // --- LOCAL STORAGE FOR SUBJECTS ---
+        function loadSubjects() {
+            const saved = localStorage.getItem('customSubjects');
+            if (saved) {
+                const subjects = JSON.parse(saved);
+                const select = document.getElementById('subjectSelect');
+                // Remove "Other" temporarily to insert new ones before it
+                select.remove(select.length - 1); 
+                subjects.forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.innerText = sub;
+                    select.appendChild(opt);
+                });
+                // Add "Other" back
+                const otherOpt = document.createElement('option');
+                otherOpt.value = "Other";
+                otherOpt.innerText = "Other (Create New)";
+                select.appendChild(otherOpt);
+            }
+        }
+        loadSubjects();
+
+        // --- UI LOGIC ---
+        function checkOther(select) {
+            const customDiv = document.getElementById('customSubjectDiv');
+            if (select.value === 'Other') {
+                customDiv.style.display = 'block';
+                document.getElementById('customSubject').required = true;
+            } else {
+                customDiv.style.display = 'none';
+                document.getElementById('customSubject').required = false;
+            }
+        }
+
+        function openSettings() { document.getElementById('settingsModal').style.display = "block"; }
+        function closeSettings() { document.getElementById('settingsModal').style.display = "none"; }
+        
+        function saveSettings() {
+            const url = document.getElementById('driveFolderId').value;
+            // Extract ID if URL is pasted
+            let id = url;
+            if(url.includes('/folders/')) {
+                id = url.split('/folders/')[1].split('?')[0];
+            }
+            localStorage.setItem('driveFolderId', id);
+            alert('Settings Saved!');
+            closeSettings();
+        }
+
+        // --- GOOGLE API LOGIC ---
+        function gapiLoaded() {
+            gapi.load('client', initializeGapiClient);
+        }
+
+        async function initializeGapiClient() {
+            await gapi.client.init({
+                apiKey: API_KEY,
+                discoveryDocs: [DISCOVERY_DOC],
+            });
+            gapiInited = true;
+            maybeEnableButtons();
+        }
+
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                callback: '', // defined later
+            });
+            gisInited = true;
+            maybeEnableButtons();
+        }
+
+        function maybeEnableButtons() {
+            if (gapiInited && gisInited) {
+                // Ready to go
+            }
+        }
+
+        function handleAuthClick() {
+            tokenClient.callback = async (resp) => {
+                if (resp.error !== undefined) {
+                    throw (resp);
+                }
+                document.getElementById('login-btn').style.display = 'none';
+                document.getElementById('user-name').style.display = 'inline';
+                document.getElementById('submitBtn').disabled = false;
+            };
+
+            if (gapi.client.getToken() === null) {
+                tokenClient.requestAccessToken({prompt: 'consent'});
+            } else {
+                tokenClient.requestAccessToken({prompt: ''});
+            }
+        }
+
+        // --- UPLOAD LOGIC ---
+        async function handleUpload(e) {
+            e.preventDefault();
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = "Processing...";
+            statusDiv.className = "";
+
+            const pName = document.getElementById('pName').value;
+            let subject = document.getElementById('subjectSelect').value;
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            // Handle "Other" logic
+            if (subject === 'Other') {
+                subject = document.getElementById('customSubject').value.trim();
+                // Capitalize first letter
+                subject = subject.charAt(0).toUpperCase() + subject.slice(1);
+                
+                // Save to local storage list
+                let savedSubjects = JSON.parse(localStorage.getItem('customSubjects') || "[]");
+                if(!savedSubjects.includes(subject)) {
+                    savedSubjects.push(subject);
+                    localStorage.setItem('customSubjects', JSON.stringify(savedSubjects));
+                    // Reload dropdown (optional visual update)
+                    location.reload(); 
+                }
+            } else {
+                // Ensure standard subjects are Capitalized too
+                subject = subject.charAt(0).toUpperCase() + subject.slice(1);
+            }
+
+            const folderId = localStorage.getItem('driveFolderId');
+            if (!folderId) {
+                statusDiv.innerHTML = "Error: Please set Drive Folder ID in settings (⚙️).";
+                statusDiv.className = "error";
+                return;
+            }
+
+            try {
+                // 1. Check if Subject Folder exists
+                const listResponse = await gapi.client.drive.files.list({
+                    q: `'${folderId}' in parents and name='${subject}' and mimeType='application/vnd.google-apps.folder' and trashed=false`,
+                    fields: 'files(id, name)',
+                    spaces: 'drive'
+                });
+
+                let targetFolderId = folderId;
+
+                if (listResponse.result.files && listResponse.result.files.length > 0) {
+                    // Folder exists
+                    targetFolderId = listResponse.result.files[0].id;
+                    console.log("Found existing folder:", targetFolderId);
+                } else {
+                    // 2. Create Folder if not exists
+                    const folderMetadata = {
+                        'name': subject,
+                        'mimeType': 'application/vnd.google-apps.folder',
+                        'parents': [folderId]
+                    };
+                    const createResponse = await gapi.client.drive.files.create({
+                        resource: folderMetadata,
+                        fields: 'id'
+                    });
+                    targetFolderId = createResponse.result.id;
+                    console.log("Created new folder:", targetFolderId);
+                }
+
+                // 3. Upload File
+                const accessToken = gapi.client.getToken().access_token;
+                const form = new FormData();
+                
+                // Create metadata for the file
+                const metadata = {
+                    'name': `${pName}_${file.name}`, // Prefix with user name
+                    'parents': [targetFolderId]
+                };
+                
+                form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                form.append('file', file);
+
+                const uploadResponse = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                    method: 'POST',
+                    headers: new Headers({ 'Authorization': 'Bearer ' + accessToken }),
+                    body: form
+                });
+
+                if (uploadResponse.ok) {
+                    statusDiv.innerHTML = `✅ Success! File uploaded to '${subject}' folder.`;
+                    statusDiv.className = "success";
+                    document.getElementById('uploadForm').reset();
+                } else {
+                    throw new Error('Upload failed');
+                }
+
+            } catch (err) {
+                console.error(err);
+                statusDiv.innerHTML = "❌ Error: " + err.message;
+                statusDiv.className = "error";
+            }
+        }
+    </script>
+</body>
+  </html>
