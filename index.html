@@ -298,38 +298,45 @@
         }
 
         function maybeEnableButtons() {
-            if (gapiInited && gisInited) {
-        // Check if user is already logged in
-                const token = gapi.client.getToken();
-                if (token !== null) {
-            // User is already authenticated
-                document.getElementById('login-btn').style.display = 'none';
-                document.getElementById('user-name').style.display = 'inline';
-                document.getElementById('submitBtn').disabled = false;
-                }
-            }
+    if (gapiInited && gisInited) {
+        // Check if user already has a valid token
+        const token = gapi.client.getToken();
+        if (token !== null) {
+            // User is already authenticated - enable the button!
+            document.getElementById('login-btn').style.display = 'none';
+            document.getElementById('user-name').style.display = 'inline';
+            document.getElementById('submitBtn').disabled = false;
         }
+    }
+}
 
-        function handleAuthClick() {
-            tokenClient.callback = async (resp) => {
-                if (resp.error !== undefined) {
-                    throw (resp);
-                }
-                document.getElementById('login-btn').style.display = 'none';
-                document.getElementById('user-name').style.display = 'inline';
-                document.getElementById('submitBtn').disabled = false;
-        
-                // Re-enable button on page reload
-                maybeEnableButtons();
-           };
-
-            if (gapi.client.getToken() === null) {
-                tokenClient.requestAccessToken({prompt: 'consent'});
-            } else {
-                tokenClient.requestAccessToken({prompt: ''});
-              }
+function handleAuthClick() {
+    tokenClient.callback = async (resp) => {
+        if (resp.error !== undefined) {
+            throw (resp);
         }
+        // Show logged in state
+        document.getElementById('login-btn').style.display = 'none';
+        document.getElementById('user-name').style.display = 'inline';
+        document.getElementById('submitBtn').disabled = false;
+    };
 
+    if (gapi.client.getToken() === null) {
+        // First time login
+        tokenClient.requestAccessToken({prompt: 'consent'});
+    } else {
+        // Refresh token
+        tokenClient.requestAccessToken({prompt: ''});
+    }
+}
+
+// Add this to run on page load
+window.onload = function() {
+    // Check authentication status when page loads
+    if (gapiInited && gisInited) {
+        maybeEnableButtons();
+    }
+};
         // --- UPLOAD LOGIC ---
         async function handleUpload(e) {
             e.preventDefault();
