@@ -53,25 +53,31 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 1. **Fork this repository**
    ```bash
    git clone https://github.com/yourusername/Files-Shorter.git
-2. Set up Google Cloud Console
+2. **Set up Google Cloud Console**
   - Go to Google Cloud Console
   - Create a new project
   - Enable Google Drive API
   - Create OAuth 2.0 Client ID (Web Application)
   - Add authorized origins: https://yourusername.github.io
   - Copy your Client ID
-3.Update the code
+3. **Update the code**
   - Open index.html
   - Replace CLIENT_ID with your OAuth Client ID
   const CLIENT_ID = 'your-client-id.apps.googleusercontent.com';
-4. Deploy to GitHub Pages
+4. **Deploy to GitHub Pages**
    ```bash
    git add .
    git commit -m "Initial commit"
    git push origin main
   - Go to Settings → Pages
   - Select main branch → Save
-5. Configure OAuth
+5. **Configure OAuth**
   - Add your GitHub Pages URL to Authorized JavaScript origins
   - Add redirect URI: https://yourusername.github.io
-
+**📁 Folder Structure**
+Files-Shorter/
+├── index.html              # Multi-file uploader (main)
+├── one-file/
+│   └── index.html          # Single-file uploader
+├── README.md               # This file
+└── .gitignore
