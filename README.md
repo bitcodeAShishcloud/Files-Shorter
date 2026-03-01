@@ -136,3 +136,33 @@ Files-Shorter/
    - Geography
    - Politics
    - ```+``` Custom subjects (create your own!)
+## 🐛 Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| "Access blocked" error | Add your email to Test Users in Google Cloud Console |
+| Upload button disabled | Click "Sign in with Google" first |
+| "Folder ID not set" | Click ⚙️ Settings and paste your Drive folder ID |
+| "Google hasn't verified" | Click Continue → Allow (normal for personal apps) |
+
+## 🔄 Single-File Version
+
+Prefer uploading one file at a time? Try our lightweight version:
+
+**🔗 Single-File Uploader:** https://bitcodeashishcloud.github.io/Files-Shorter/one-file/
+
+## 👨‍💻 Author
+
+**Ashish Gupta**  
+🔗 GitHub: https://github.com/bitcodeAShishcloud  
+📧 Contact: agupta38160@gmail.com
+
+## 📝 License
+
+MIT License - Free to use, modify, and distribute.
+
+---
+
+**Made with ❤️ by Ashish Gupta | Hosted on GitHub Pages**
+
+⭐ If you find this useful, please give it a star!
