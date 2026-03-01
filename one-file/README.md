@@ -135,4 +135,4 @@ Files-Shorter/
    - History
    - Geography
    - Politics
-   - + Custom subjects (create your own!)
+   - ```+``` Custom subjects (create your own!)
