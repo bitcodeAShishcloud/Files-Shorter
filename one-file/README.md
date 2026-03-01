@@ -83,3 +83,22 @@ Files-Shorter/
 │   └── index.html          # Single-file uploader
 ├── README.md               # This file
 └── .gitignore
+
+**🎨 Supported File Types**
+   📄 Documents: PDF, Word, TXT, PPT
+   🖼️ Images: JPG, PNG, GIF, WebP, SVG
+   🎥 Videos: MP4, AVI, MOV, MKV
+   📦 Others: Any file type supported by Google Drive
+   🔒 Security & Privacy
+**Why This is 100% Secure:**
+   🔐 Client-Side Only - No server processes your files
+   🔐 Direct Upload - Files go straight to Google Drive
+   🔐 No Data Storage - Nothing stored on GitHub or third-party servers
+   🔐 Your Data, Your Control - Only you have access to your Drive
+   🔐 Open Source - All code is visible and auditable
+**What Permissions Are Needed?**
+   The app requests drive.file scope which allows:
+   ✅ View and manage Google Drive files created by this app
+   ✅ Create new folders and files
+   ❌ Cannot access your existing files
+   ❌ Cannot share or delete files outside the app
