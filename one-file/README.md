@@ -66,6 +66,6 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
   const CLIENT_ID = 'your-client-id.apps.googleusercontent.com';
 4. Deploy to GitHub Pages
    ```bash
-  git add .
-  git commit -m "Initial commit"
-  git push origin main
+   git add .
+   git commit -m "Initial commit"
+   git push origin main
