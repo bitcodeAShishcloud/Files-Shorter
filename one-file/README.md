@@ -84,6 +84,7 @@ Files-Shorter/
 ├── README.md               # This file
 └── .gitignore
 
+
 **🎨 Supported File Types**
    📄 Documents: PDF, Word, TXT, PPT
    🖼️ Images: JPG, PNG, GIF, WebP, SVG
