@@ -299,7 +299,14 @@
 
         function maybeEnableButtons() {
             if (gapiInited && gisInited) {
-                // Ready to go
+        // Check if user is already logged in
+                const token = gapi.client.getToken();
+                if (token !== null) {
+            // User is already authenticated
+                document.getElementById('login-btn').style.display = 'none';
+                document.getElementById('user-name').style.display = 'inline';
+                document.getElementById('submitBtn').disabled = false;
+                }
             }
         }
 
@@ -311,13 +318,16 @@
                 document.getElementById('login-btn').style.display = 'none';
                 document.getElementById('user-name').style.display = 'inline';
                 document.getElementById('submitBtn').disabled = false;
-            };
+        
+                // Re-enable button on page reload
+                maybeEnableButtons();
+           };
 
             if (gapi.client.getToken() === null) {
                 tokenClient.requestAccessToken({prompt: 'consent'});
             } else {
                 tokenClient.requestAccessToken({prompt: ''});
-            }
+              }
         }
 
         // --- UPLOAD LOGIC ---
