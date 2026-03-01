@@ -69,3 +69,9 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
    git add .
    git commit -m "Initial commit"
    git push origin main
+  - Go to Settings → Pages
+  - Select main branch → Save
+5. Configure OAuth
+  - Add your GitHub Pages URL to Authorized JavaScript origins
+  - Add redirect URI: https://yourusername.github.io
+
