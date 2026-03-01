@@ -89,7 +89,9 @@ Files-Shorter/
    - 🖼️ Images: JPG, PNG, GIF, WebP, SVG
    - 🎥 Videos: MP4, AVI, MOV, MKV
    - 📦 Others: Any file type supported by Google Drive
-   - 🔒 Security & Privacy
+
+🔒 Security & Privacy
+
 
 **Why This is 100% Secure:**<br>
    🔐 Client-Side Only - No server processes your files<br>
@@ -97,6 +99,7 @@ Files-Shorter/
    🔐 No Data Storage - Nothing stored on GitHub or third-party servers<br>
    🔐 Your Data, Your Control - Only you have access to your Drive<br>
    🔐 Open Source - All code is visible and auditable<br>
+
 
 **What Permissions Are Needed?**<br>
    The app requests drive.file scope which allows:<br>
