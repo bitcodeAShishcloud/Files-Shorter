@@ -74,6 +74,7 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 5. **Configure OAuth**
   - Add your GitHub Pages URL to Authorized JavaScript origins
   - Add redirect URI: https://yourusername.github.io
+
 **📁 Folder Structure**
 ```bash
 Files-Shorter/
