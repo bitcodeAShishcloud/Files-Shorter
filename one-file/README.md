@@ -90,7 +90,7 @@ Files-Shorter/
    - 🎥 Videos: MP4, AVI, MOV, MKV
    - 📦 Others: Any file type supported by Google Drive
 
-🔒 Security & Privacy
+##🔒 Security & Privacy
 
 
 **Why This is 100% Secure:**<br>
