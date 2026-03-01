@@ -106,3 +106,33 @@ Files-Shorter/
    ✅ Create new folders and files<br>
    ❌ Cannot access your existing files<br>
    ❌ Cannot share or delete files outside the app<br>
+
+## 📊 Upload Summary Example
+
+   ✅ Success: 5 file(s)
+   ❌ Failed: 0 file(s)
+
+**Files:**
+   ✅ notes1.pdf
+   ✅ notes2.pdf
+   ✅ assignment.docx
+   ✅ image.png
+   ✅ video.mp4
+
+## 🎯 Pre-configured Subjects
+   - Hacking
+   - Hacking
+   - Ethical Hacking
+   - DBMS (Database Management System)
+   - AICE (Artificial Intelligence & Computer Engineering)
+   - CTI (Computer Theory & Information)
+   - DSA (Data Structures & Algorithms)
+   - Web Technology
+   - UPSC (Civil Services)
+   - English
+   - Mathematics
+   - Science
+   - History
+   - Geography
+   - Politics
+   - + Custom subjects (create your own!)
