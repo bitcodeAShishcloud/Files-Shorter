@@ -155,14 +155,15 @@ Prefer uploading one file at a time? Try our lightweight version:
 
 **Ashish Gupta**  
 🔗 GitHub: https://github.com/bitcodeAShishcloud  
-📧 Contact: agupta38160@gmail.com
+📧 Contact: [Google Mail](agupta38160@gmail.com)
 
 ## 📝 License
 
 MIT License - Free to use, modify, and distribute.
 
 ---
-
+<div style=text-align: center>
 **Made with ❤️ by Ashish Gupta | Hosted on GitHub Pages**
 
 ⭐ If you find this useful, please give it a star!
+</div>
