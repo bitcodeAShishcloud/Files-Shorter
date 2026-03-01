@@ -91,16 +91,16 @@ Files-Shorter/
    - 📦 Others: Any file type supported by Google Drive
    - 🔒 Security & Privacy
 
-**Why This is 100% Secure:**
-   🔐 Client-Side Only - No server processes your files
-   🔐 Direct Upload - Files go straight to Google Drive
-   🔐 No Data Storage - Nothing stored on GitHub or third-party servers
-   🔐 Your Data, Your Control - Only you have access to your Drive
-   🔐 Open Source - All code is visible and auditable
+**Why This is 100% Secure:**<br>
+   🔐 Client-Side Only - No server processes your files<br>
+   🔐 Direct Upload - Files go straight to Google Drive<br>
+   🔐 No Data Storage - Nothing stored on GitHub or third-party servers<br>
+   🔐 Your Data, Your Control - Only you have access to your Drive<br>
+   🔐 Open Source - All code is visible and auditable<br>
 
-**What Permissions Are Needed?**
-   The app requests drive.file scope which allows:
-   ✅ View and manage Google Drive files created by this app
-   ✅ Create new folders and files
-   ❌ Cannot access your existing files
-   ❌ Cannot share or delete files outside the app
+**What Permissions Are Needed?**<br>
+   The app requests drive.file scope which allows:<br>
+   ✅ View and manage Google Drive files created by this app<br>
+   ✅ Create new folders and files<br>
+   ❌ Cannot access your existing files<br>
+   ❌ Cannot share or delete files outside the app<br>
