@@ -9,7 +9,7 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 
 ## 🌟 Features
 
-✅ **25+ Languages Supported** - Including English, Spanish, French, German, Chinese, Japanese, Korean, Hindi, and many more( ### [help](https://bitcodeashishcloud.github.io/Files-Shorter/help.html/)
+✅ **25+ Languages Supported** - Including English, Spanish, French, German, Chinese, Japanese, Korean, Hindi, and many more( <b> [help](https://bitcodeashishcloud.github.io/Files-Shorter/help.html/)</b> <br>
 ✅ **Multi-File Upload** - Select and upload multiple files at once  
 ✅ **Subject-Based Organization** - Auto-creates folders by subject (Hacking, DBMS, DSA, etc.)  
 ✅ **100% Secure** - Files go directly from your browser to Google Drive  
