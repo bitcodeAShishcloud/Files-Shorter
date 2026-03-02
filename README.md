@@ -1,5 +1,5 @@
 # 📁 Secure File Upload - Multi-File Version
-
+[![Help Section](https://img.shields.io/badge/Live-Demo-saffron)](https://bitcodeashishcloud.github.io/Files-Shorter/help.html/)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://bitcodeashishcloud.github.io/Files-Shorter/)
 [![GitHub Pages](https://img.shields.io/badge/GitHub-Pages-blue)](https://pages.github.com/)
 [![Google Drive API](https://img.shields.io/badge/Google-Drive-red)](https://developers.google.com/drive)
@@ -9,6 +9,7 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 
 ## 🌟 Features
 
+✅ **25+ Languages Supported** - Including English, Spanish, French, German, Chinese, Japanese, Korean, Arabic, Hindi, and many more(### [help](https://bitcodeashishcloud.github.io/Files-Shorter/help.html/)
 ✅ **Multi-File Upload** - Select and upload multiple files at once  
 ✅ **Subject-Based Organization** - Auto-creates folders by subject (Hacking, DBMS, DSA, etc.)  
 ✅ **100% Secure** - Files go directly from your browser to Google Drive  
@@ -16,7 +17,8 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 ✅ **Custom Subjects** - Create your own subject categories  
 ✅ **Progress Tracking** - See upload status for each file  
 ✅ **Mobile Friendly** - Works on all devices  
-✅ **Zero Storage Cost** - Uses your Google Drive storage  
+✅ **Zero Storage Cost** - Uses your Google Drive storage 
+
 
 ## 🚀 Live Demo
 
