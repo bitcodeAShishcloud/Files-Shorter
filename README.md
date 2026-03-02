@@ -164,11 +164,11 @@ Prefer uploading one file at a time? Try our lightweight version:
 📧 Contact: [Google Mail](agupta38160@gmail.com)
 
 ## 📝 License
-
+<div style=text-align: center>
 MIT License - Free to use, modify, and distribute.
-
+</div>
 ---
 <div style=text-align: center>
- Made with ❤️ by Ashish Gupta | Hosted on GitHub Pages
+ Made with ❤️ by Ashish Gupta | Hosted on GitHub Pages<br>
 ⭐ If you find this useful, please give it a star!
 </div>
