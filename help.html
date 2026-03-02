@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide & Security Details - Secure File Upload</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC&family=Noto+Sans+JP&family=Noto+Sans+KR&family=Noto+Sans+Arabic&family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4285f4;
+            --primary-dark: #3367d6;
+            --secondary: #34a853;
+            --accent: #fbbc04;
+            --danger: #ea4335;
+            --dark: #202124;
+            --light: #f8f9fa;
+            --gray: #5f6368;
+            --light-gray: #e8eaed;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1rem;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            background: white;
+            color: var(--primary);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: -5px;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+            min-width: 200px;
+            z-index: 100;
+        }
+
+        .language-selector select {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border-radius: 50px;
+            border: none;
+            background: white;
+            color: var(--dark);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            appearance: none;
+            transition: var(--transition);
+        }
+
+        .language-selector select:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .language-selector::after {
+            content: "\f107";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-title h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-header i {
+            font-size: 1.8rem;
+            background: rgba(255,255,255,0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-body p {
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
+
+        .steps {
+            counter-reset: step-counter;
+            margin-top: 1.5rem;
+        }
+
+        .step {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed var(--light-gray);
+        }
+
+        .step:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: var(--primary);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .step h4 {
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .step p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        /* Security Section */
+        .security-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-top: 3rem;
+        }
+
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .security-item {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border-radius: var(--radius);
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .security-item:hover {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .security-item:hover i, 
+        .security-item:hover h3,
+        .security-item:hover p {
+            color: white;
+        }
+
+        .security-item i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .security-item h3 {
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .security-item p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        /* Interactive Elements */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted var(--primary);
+            cursor: help;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--dark);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        .tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark) transparent transparent transparent;
+        }
+
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .footer-section p, .footer-section a {
+            color: #aaa;
+            margin-bottom: 0.75rem;
+            display: block;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card, .security-item, .section-title {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                justify-content: center;
+                margin-bottom: 1.5rem;
+            }
+            
+            .language-selector {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .security-section {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Language specific fonts */
+        .lang-zh, .lang-zh-tw, .lang-zh-hk {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        
+        .lang-ja {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+        
+        .lang-ko {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .lang-ar, .lang-fa, .lang-ur {
+            font-family: 'Noto Sans Arabic', sans-serif;
+            direction: rtl;
+        }
+        
+        .lang-hi, .lang-mr, .lang-ne {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>
+                        <h1 data-i18n="title">Secure File Upload</h1>
+                        <p data-i18n="subtitle">Guide & Security Details</p>
+                    </div>
+                </div>
+                <div class="language-selector">
+                    <select id="languageSelect">
+                        <option value="en">English</option>
+                        <option value="es">Español (Spanish)</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="de">Deutsch (German)</option>
+                        <option value="it">Italiano (Italian)</option>
+                        <option value="pt">Português (Portuguese)</option>
+                        <option value="ru">Русский (Russian)</option>
+                        <option value="zh">中文 (Chinese)</option>
+                        <option value="ja">日本語 (Japanese)</option>
+                        <option value="ko">한국어 (Korean)</option>
+                        <option value="ar">العربية (Arabic)</option>
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="bn">বাংলা (Bengali)</option>
+                        <option value="ur">اردو (Urdu)</option>
+                        <option value="fa">فارسی (Persian)</option>
+                        <option value="tr">Türkçe (Turkish)</option>
+                        <option value="vi">Tiếng Việt (Vietnamese)</option>
+                        <option value="th">ไทย (Thai)</option>
+                        <option value="id">Bahasa Indonesia (Indonesian)</option>
+                        <option value="ms">Bahasa Melayu (Malay)</option>
+                        <option value="tl">Filipino (Tagalog)</option>
+                        <option value="nl">Nederlands (Dutch)</option>
+                        <option value="pl">Polski (Polish)</option>
+                        <option value="uk">Українська (Ukrainian)</option>
+                        <option value="el">Ελληνικά (Greek)</option>
+                        <option value="he">עברית (Hebrew)</option>
+                        <option value="sv">Svenska (Swedish)</option>
+                        <option value="no">Norsk (Norwegian)</option>
+                        <option value="da">Dansk (Danish)</option>
+                        <option value="fi">Suomi (Finnish)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="section-title">
+                <h2 data-i18n="guideTitle">User Guide</h2>
+                <p data-i18n="guideDesc">Learn how to use our secure file upload system efficiently and safely</p>
+            </div>
+
+            <div class="cards-container">
+                <!-- Login Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <h3 data-i18n="loginTitle">Login & Authentication</h3>
+                    </div>
+                    <div class="card-body">
+                        <p data-i18n="loginDesc">Secure authentication using your Google account. No additional passwords required.</p>
+                        <div class="steps">
+                            <div class="step">
+                                <h4 data-i18n="loginStep1Title">Click Sign In</h4>
+                                <p data-i18n="loginStep1Desc">Click the "Sign in with Google" button at the top of the page</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="loginStep2Title">Select Account</h4>
+                                <p data-i18n="loginStep2Desc">Choose your Google account from the list or enter your credentials</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="loginStep3Title">Grant Permissions</h4>
+                                <p data-i18n="loginStep3Desc">Allow the app to access your Google Drive for file uploads</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="loginStep4Title">Verification Complete</h4>
+                                <p data-i18n="loginStep4Desc">You'll see "Logged in!" message when authentication is successful</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drive Configuration Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fab fa-google-drive"></i>
+                        <h3 data-i18n="driveTitle">Google Drive Configuration</h3>
+                    </div>
+                    <div class="card-body">
+                        <p data-i18n="driveDesc">Set up your Google Drive folder to organize uploaded files automatically.</p>
+                        <div class="steps">
+                            <div class="step">
+                                <h4 data-i18n="driveStep1Title">Create Folder</h4>
+                                <p data-i18n="driveStep1Desc">Create a folder in your Google Drive where files will be stored</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="driveStep2Title">Copy Folder ID</h4>
+                                <p data-i18n="driveStep2Desc">Open the folder and copy its ID from the URL or share link</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="driveStep3Title">Open Settings</h4>
+                                <p data-i18n="driveStep3Desc">Click the <span class="tooltip" data-i18n="settingsIcon">⚙️</span> icon in the top-right corner</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="driveStep4Title">Save Configuration</h4>
+                                <p data-i18n="driveStep4Desc">Paste the folder ID/URL and click "Save Settings"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Name & Subject Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user-tag"></i>
+                        <h3 data-i18n="nameSubjectTitle">Name & Subject</h3>
+                    </div>
+                    <div class="card-body">
+                        <p data-i18n="nameSubjectDesc">Organize your files with your name and subject categories.</p>
+                        <div class="steps">
+                            <div class="step">
+                                <h4 data-i18n="nameStep1Title">Enter Your Name</h4>
+                                <p data-i18n="nameStep1Desc">Type your name in the "Your Name" field (required)</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="nameStep2Title">Select Subject</h4>
+                                <p data-i18n="nameStep2Desc">Choose from predefined subjects or create a custom one</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="nameStep3Title">Custom Subject</h4>
+                                <p data-i18n="nameStep3Desc">Select "Other" to create a new subject category (auto-saved)</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="nameStep4Title">File Organization</h4>
+                                <p data-i18n="nameStep4Desc">Files will be saved as: YourName_FileName in Subject folder</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload System Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3 data-i18n="uploadTitle">Upload System</h3>
+                    </div>
+                    <div class="card-body">
+                        <p data-i18n="uploadDesc">Fast, secure, and reliable file upload with progress tracking.</p>
+                        <div class="steps">
+                            <div class="step">
+                                <h4 data-i18n="uploadStep1Title">Select Files</h4>
+                                <p data-i18n="uploadStep1Desc">Click "Choose File" and select one or multiple files</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="uploadStep2Title">File Type</h4>
+                                <p data-i18n="uploadStep2Desc">Select the file type from dropdown (PDF, PPT, Image, etc.)</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="uploadStep3Title">Upload</h4>
+                                <p data-i18n="uploadStep3Desc">Click "Upload to Drive" button to start the upload process</p>
+                            </div>
+                            <div class="step">
+                                <h4 data-i18n="uploadStep4Title">Confirmation</h4>
+                                <p data-i18n="uploadStep4Desc">View upload summary with success/failure status for each file</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="security-section">
+                <div class="section-title">
+                    <h2 data-i18n="securityTitle">Security & Privacy</h2>
+                    <p data-i18n="securityDesc">Your data security is our top priority. Here's how we protect your information</p>
+                </div>
+
+                <div class="security-grid">
+                    <div class="security-item">
+                        <i class="fas fa-lock"></i>
+                        <h3 data-i18n="security1Title">Client-Side Only</h3>
+                        <p data-i18n="security1Desc">All processing happens in your browser. Files never touch our servers.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3 data-i18n="security2Title">Direct Upload</h3>
+                        <p data-i18n="security2Desc">Files go directly from your device to your Google Drive securely.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-user-secret"></i>
+                        <h3 data-i18n="security3Title">No Data Storage</h3>
+                        <p data-i18n="security3Desc">We don't store, log, or track any of your files or personal data.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-key"></i>
+                        <h3 data-i18n="security4Title">OAuth 2.0</h3>
+                        <p data-i18n="security4Desc">Industry-standard authentication. We never see your password.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-eye-slash"></i>
+                        <h3 data-i18n="security5Title">Minimal Permissions</h3>
+                        <p data-i18n="security5Desc">Only requests access to files created by this app, not your entire Drive.</p>
+                    </div>
+                    <div class="security-item">
+                        <i class="fas fa-code"></i>
+                        <h3 data-i18n="security6Title">Open Source</h3>
+                        <p data-i18n="security6Desc">All code is public and auditable on GitHub for transparency.</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; padding: 2rem; background: var(--light); border-radius: var(--radius); border-left: 4px solid var(--secondary);">
+                    <h3 style="margin-bottom: 1rem; color: var(--dark); display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+                        <span data-i18n="securityNoteTitle">Important Security Note</span>
+                    </h3>
+                    <p data-i18n="securityNoteDesc">
+                        This application uses Google's official APIs with OAuth 2.0 authentication. Your files are uploaded directly to your personal Google Drive account. 
+                        We do not have access to view, modify, or share your files. The application only creates folders and uploads files as instructed by you. 
+                        You can revoke access at any time from your Google Account settings.
+                    </p>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <a href="https://bitcodeashishcloud.github.io/Files-Shorter/" class="btn btn-primary">
+                    <i class="fas fa-external-link-alt"></i>
+                    <span data-i18n="launchApp">Launch Application</span>
+                </a>
+                <a href="https://github.com/bitcodeAShishcloud/Files-Shorter" class="btn btn-secondary">
+                    <i class="fab fa-github"></i>
+                    <span data-i18n="viewCode">View Source Code</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-i18n="footerAbout">About</h3>
+                    <p data-i18n="footerAboutDesc">A secure, client-side file upload tool that organizes files directly to your Google Drive.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="footerLinks">Quick Links</h3>
+                    <a href="https://bitcodeashishcloud.github.io/Files-Shorter/" data-i18n="footerMultiFile">Multi-File Uploader</a>
+                    <a href="https://bitcodeashishcloud.github.io/Files-Shorter/one-file/" data-i18n="footerSingleFile">Single-File Uploader</a>
+                    <a href="https://github.com/bitcodeAShishcloud/Files-Shorter" data-i18n="footerGitHub">GitHub Repository</a>
+                </div>
+                <div class="footer-section">
+                    <h3 data-i18n="footerContact">Contact</h3>
+                    <p><i class="fas fa-user" style="margin-right: 8px;"></i> Ashish Gupta</p>
+                    <p><i class="fas fa-envelope" style="margin-right: 8px;"></i> agupta38160@gmail.com</p>
+                    <p><i class="fab fa-github" style="margin-right: 8px;"></i> @bitcodeAShishcloud</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Secure File Upload. <span data-i18n="footerRights">All rights reserved.</span> | <span data-i18n="footerLicense">MIT License</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Translations object
+        const translations = {
+            en: {
+                title: "Secure File Upload",
+                subtitle: "Guide & Security Details",
+                guideTitle: "User Guide",
+                guideDesc: "Learn how to use our secure file upload system efficiently and safely",
+                loginTitle: "Login & Authentication",
+                loginDesc: "Secure authentication using your Google account. No additional passwords required.",
+                loginStep1Title: "Click Sign In",
+                loginStep1Desc: "Click the \"Sign in with Google\" button at the top of the page",
+                loginStep2Title: "Select Account",
+                loginStep2Desc: "Choose your Google account from the list or enter your credentials",
+                loginStep3Title: "Grant Permissions",
+                loginStep3Desc: "Allow the app to access your Google Drive for file uploads",
+                loginStep4Title: "Verification Complete",
+                loginStep4Desc: "You'll see \"Logged in!\" message when authentication is successful",
+                driveTitle: "Google Drive Configuration",
+                driveDesc: "Set up your Google Drive folder to organize uploaded files automatically.",
+                driveStep1Title: "Create Folder",
+                driveStep1Desc: "Create a folder in your Google Drive where files will be stored",
+                driveStep2Title: "Copy Folder ID",
+                driveStep2Desc: "Open the folder and copy its ID from the URL or share link",
+                driveStep3Title: "Open Settings",
+                driveStep3Desc: "Click the ⚙️ icon in the top-right corner",
+                driveStep4Title: "Save Configuration",
+                driveStep4Desc: "Paste the folder ID/URL and click \"Save Settings\"",
+                nameSubjectTitle: "Name & Subject",
+                nameSubjectDesc: "Organize your files with your name and subject categories.",
+                nameStep1Title: "Enter Your Name",
+                nameStep1Desc: "Type your name in the \"Your Name\" field (required)",
+                nameStep2Title: "Select Subject",
+                nameStep2Desc: "Choose from predefined subjects or create a custom one",
+                nameStep3Title: "Custom Subject",
+                nameStep3Desc: "Select \"Other\" to create a new subject category (auto-saved)",
+                nameStep4Title: "File Organization",
+                nameStep4Desc: "Files will be saved as: YourName_FileName in Subject folder",
+                uploadTitle: "Upload System",
+                uploadDesc: "Fast, secure, and reliable file upload with progress tracking.",
+                uploadStep1Title: "Select Files",
+                uploadStep1Desc: "Click \"Choose File\" and select one or multiple files",
+                uploadStep2Title: "File Type",
+                uploadStep2Desc: "Select the file type from dropdown (PDF, PPT, Image, etc.)",
+                uploadStep3Title: "Upload",
+                uploadStep3Desc: "Click \"Upload to Drive\" button to start the upload process",
+                uploadStep4Title: "Confirmation",
+                uploadStep4Desc: "View upload summary with success/failure status for each file",
+                securityTitle: "Security & Privacy",
+                securityDesc: "Your data security is our top priority. Here's how we protect your information",
+                security1Title: "Client-Side Only",
+                security1Desc: "All processing happens in your browser. Files never touch our servers.",
+                security2Title: "Direct Upload",
+                security2Desc: "Files go directly from your device to your Google Drive securely.",
+                security3Title: "No Data Storage",
+                security3Desc: "We don't store, log, or track any of your files or personal data.",
+                security4Title: "OAuth 2.0",
+                security4Desc: "Industry-standard authentication. We never see your password.",
+                security5Title: "Minimal Permissions",
+                security5Desc: "Only requests access to files created by this app, not your entire Drive.",
+                security6Title: "Open Source",
+                security6Desc: "All code is public and auditable on GitHub for transparency.",
+                securityNoteTitle: "Important Security Note",
+                securityNoteDesc: "This application uses Google's official APIs with OAuth 2.0 authentication. Your files are uploaded directly to your personal Google Drive account. We do not have access to view, modify, or share your files. The application only creates folders and uploads files as instructed by you. You can revoke access at any time from your Google Account settings.",
+                launchApp: "Launch Application",
+                viewCode: "View Source Code",
+                footerAbout: "About",
+                footerAboutDesc: "A secure, client-side file upload tool that organizes files directly to your Google Drive.",
+                footerLinks: "Quick Links",
+                footerMultiFile: "Multi-File Uploader",
+                footerSingleFile: "Single-File Uploader",
+                footerGitHub: "GitHub Repository",
+                footerContact: "Contact",
+                footerRights: "All rights reserved.",
+                footerLicense: "MIT License",
+                settingsIcon: "⚙️"
+            },
+            es: {
+                title: "Carga Segura de Archivos",
+                subtitle: "Guía y Detalles de Seguridad",
+                guideTitle: "Guía de Usuario",
+                guideDesc: "Aprende a usar nuestro sistema de carga de archivos seguro de manera eficiente y segura",
+                loginTitle: "Inicio de Sesión y Autenticación",
+                loginDesc: "Autenticación segura usando tu cuenta de Google. No se requieren contraseñas adicionales.",
+                loginStep1Title: "Haz clic en Iniciar Sesión",
+                loginStep1Desc: "Haz clic en el botón \"Iniciar sesión con Google\" en la parte superior de la página",
+                loginStep2Title: "Seleccionar Cuenta",
+                loginStep2Desc: "Elige tu cuenta de Google de la lista o ingresa tus credenciales",
+                loginStep3Title: "Otorgar Permisos",
+                loginStep3Desc: "Permite que la aplicación acceda a tu Google Drive para cargar archivos",
+                loginStep4Title: "Verificación Completa",
+                loginStep4Desc: "Verás el mensaje \"¡Sesión iniciada!\" cuando la autenticación sea exitosa",
+                driveTitle: "Configuración de Google Drive",
+                driveDesc: "Configura tu carpeta de Google Drive para organizar los archivos cargados automáticamente.",
+                driveStep1Title: "Crear Carpeta",
+                driveStep1Desc: "Crea una carpeta en tu Google Drive donde se almacenarán los archivos",
+                driveStep2Title: "Copiar ID de Carpeta",
+                driveStep2Desc: "Abre la carpeta y copia su ID desde la URL o enlace compartido",
+                driveStep3Title: "Abrir Configuración",
+                driveStep3Desc: "Haz clic en el icono ⚙️ en la esquina superior derecha",
+                driveStep4Title: "Guardar Configuración",
+                driveStep4Desc: "Pega el ID/URL de la carpeta y haz clic en \"Guardar Configuración\"",
+                nameSubjectTitle: "Nombre y Asunto",
+                nameSubjectDesc: "Organiza tus archivos con tu nombre y categorías de asunto.",
+                nameStep1Title: "Ingresa Tu Nombre",
+                nameStep1Desc: "Escribe tu nombre en el campo \"Tu Nombre\" (requerido)",
+                nameStep2Title: "Seleccionar Asunto",
+                nameStep2Desc: "Elige entre asuntos predefinidos o crea uno personalizado",
+                nameStep3Title: "Asunto Personalizado",
+                nameStep3Desc: "Selecciona \"Otro\" para crear una nueva categoría de asunto (auto-guardado)",
+                nameStep4Title: "Organización de Archivos",
+                nameStep4Desc: "Los archivos se guardarán como: TuNombre_NombreArchivo en la carpeta Asunto",
+                uploadTitle: "Sistema de Carga",
+                uploadDesc: "Carga de archivos rápida, segura y confiable con seguimiento de progreso.",
+                uploadStep1Title: "Seleccionar Archivos",
+                uploadStep1Desc: "Haz clic en \"Elegir Archivo\" y selecciona uno o varios archivos",
+                uploadStep2Title: "Tipo de Archivo",
+                uploadStep2Desc: "Selecciona el tipo de archivo del menú desplegable (PDF, PPT, Imagen, etc.)",
+                uploadStep3Title: "Cargar",
+                uploadStep3Desc: "Haz clic en el botón \"Cargar a Drive\" para iniciar el proceso de carga",
+                uploadStep4Title: "Confirmación",
+                uploadStep4Desc: "Ver el resumen de carga con estado de éxito/fallo para cada archivo",
+                securityTitle: "Seguridad y Privacidad",
+                securityDesc: "La seguridad de tus datos es nuestra máxima prioridad. Así es como protegemos tu información",
+                security1Title: "Solo del Lado del Cliente",
+                security1Desc: "Todo el procesamiento ocurre en tu navegador. Los archivos nunca tocan nuestros servidores.",
+                security2Title: "Carga Directa",
+                security2Desc: "Los archivos van directamente desde tu dispositivo a tu Google Drive de forma segura.",
+                security3Title: "Sin Almacenamiento de Datos",
+                security3Desc: "No almacenamos, registramos ni rastreamos ninguno de tus archivos o datos personales.",
+                security4Title: "OAuth 2.0",
+                security4Desc: "Autenticación estándar de la industria. Nunca vemos tu contraseña.",
+                security5Title: "Permisos Mínimos",
+                security5Desc: "Solo solicita acceso a archivos creados por esta aplicación, no a todo tu Drive.",
+                security6Title: "Código Abierto",
+                security6Desc: "Todo el código es público y auditable en GitHub para transparencia.",
+                securityNoteTitle: "Nota de Seguridad Importante",
+                securityNoteDesc: "Esta aplicación utiliza las API oficiales de Google con autenticación OAuth 2.0. Tus archivos se cargan directamente a tu cuenta personal de Google Drive. No tenemos acceso para ver, modificar o compartir tus archivos. La aplicación solo crea carpetas y carga archivos según tus instrucciones. Puedes revocar el acceso en cualquier momento desde la configuración de tu Cuenta de Google.",
+                launchApp: "Iniciar Aplicación",
+                viewCode: "Ver Código Fuente",
+                footerAbout: "Acerca de",
+                footerAboutDesc: "Una herramienta de carga de archivos segura del lado del cliente que organiza archivos directamente en tu Google Drive.",
+                footerLinks: "Enlaces Rápidos",
+                footerMultiFile: "Carga Múltiple",
+                footerSingleFile: "Carga Individual",
+                footerGitHub: "Repositorio GitHub",
+                footerContact: "Contacto",
+                footerRights: "Todos los derechos reservados.",
+                footerLicense: "Licencia MIT",
+                settingsIcon: "⚙️"
+            },
+            fr: {
+                title: "Téléchargement Sécurisé de Fichiers",
+                subtitle: "Guide et Détails de Sécurité",
+                guideTitle: "Guide de l'Utilisateur",
+                guideDesc: "Apprenez à utiliser notre système de téléchargement de fichiers sécurisé efficacement et en toute sécurité",
+                loginTitle: "Connexion et Authentification",
+                loginDesc: "Authentification sécurisée utilisant votre compte Google. Aucun mot de passe supplémentaire requis.",
+                loginStep1Title: "Cliquez sur Se Connecter",
+                loginStep1Desc: "Cliquez sur le bouton \"Se connecter avec Google\" en haut de la page",
+                loginStep2Title: "Sélectionner un Compte",
+                loginStep2Desc: "Choisissez votre compte Google dans la liste ou entrez vos identifiants",
+                loginStep3Title: "Accorder les Permissions",
+                loginStep3Desc: "Autorisez l'application à accéder à votre Google Drive pour télécharger des fichiers",
+                loginStep4Title: "Vérification Terminée",
+                loginStep4Desc: "Vous verrez le message \"Connecté !\" lorsque l'authentification réussira",
+                driveTitle: "Configuration Google Drive",
+                driveDesc: "Configurez votre dossier Google Drive pour organiser automatiquement les fichiers téléchargés.",
+                driveStep1Title: "Créer un Dossier",
+                driveStep1Desc: "Créez un dossier dans votre Google Drive où les fichiers seront stockés",
+                driveStep2Title: "Copier l'ID du Dossier",
+                driveStep2Desc: "Ouvrez le dossier et copiez son ID depuis l'URL ou le lien de partage",
+                driveStep3Title: "Ouvrir les Paramètres",
+                driveStep3Desc: "Cliquez sur l'icône ⚙️ dans le coin supérieur droit",
+                driveStep4Title: "Enregistrer la Configuration",
+                driveStep4Desc: "Collez l'ID/URL du dossier et cliquez sur \"Enregistrer les paramètres\"",
+                nameSubjectTitle: "Nom et Sujet",
+                nameSubjectDesc: "Organisez vos fichiers avec votre nom et vos catégories de sujet.",
+                nameStep1Title: "Entrez Votre Nom",
+                nameStep1Desc: "Tapez votre nom dans le champ \"Votre Nom\" (requis)",
+                nameStep2Title: "Sélectionner un Sujet",
+                nameStep2Desc: "Choisissez parmi les sujets prédéfinis ou créez-en un personnalisé",
+                nameStep3Title: "Sujet Personnalisé",
+                nameStep3Desc: "Sélectionnez \"Autre\" pour créer une nouvelle catégorie de sujet (enregistrement automatique)",
+                nameStep4Title: "Organisation des Fichiers",
+                nameStep4Desc: "Les fichiers seront enregistrés sous : VotreNom_NomFichier dans le dossier Sujet",
+                uploadTitle: "Système de Téléchargement",
+                uploadDesc: "Téléchargement de fichiers rapide, sécurisé et fiable avec suivi de progression.",
+                uploadStep1Title: "Sélectionner des Fichiers",
+                uploadStep1Desc: "Cliquez sur \"Choisir un fichier\" et sélectionnez un ou plusieurs fichiers",
+                uploadStep2Title: "Type de Fichier",
+                uploadStep2Desc: "Sélectionnez le type de fichier dans la liste déroulante (PDF, PPT, Image, etc.)",
+                uploadStep3Title: "Télécharger",
+                uploadStep3Desc: "Cliquez sur le bouton \"Télécharger vers Drive\" pour démarrer le processus",
+                uploadStep4Title: "Confirmation",
+                uploadStep4Desc: "Afficher le résumé du téléchargement avec le statut de succès/échec pour chaque fichier",
+                securityTitle: "Sécurité et Confidentialité",
+                securityDesc: "La sécurité de vos données est notre priorité absolue. Voici comment nous protégeons vos informations",
+                security1Title: "Côté Client Uniquement",
+                security1Desc: "Tout le traitement se fait dans votre navigateur. Les fichiers ne touchent jamais nos serveurs.",
+                security2Title: "Téléchargement Direct",
+                security2Desc: "Les fichiers vont directement de votre appareil à votre Google Drive en toute sécurité.",
+                security3Title: "Aucun Stockage de Données",
+                security3Desc: "Nous ne stockons, n'enregistrons ni ne suivons aucun de vos fichiers ou données personnelles.",
+                security4Title: "OAuth 2.0",
+                security4Desc: "Authentification standard de l'industrie. Nous ne voyons jamais votre mot de passe.",
+                security5Title: "Permissions Minimales",
+                security5Desc: "Demande uniquement l'accès aux fichiers créés par cette application, pas à tout votre Drive.",
+                security6Title: "Code Source Ouvert",
+                security6Desc: "Tout le code est public et auditable sur GitHub pour plus de transparence.",
+                securityNoteTitle: "Note de Sécurité Importante",
+                securityNoteDesc: "Cette application utilise les API officielles de Google avec authentification OAuth 2.0. Vos fichiers sont téléchargés directement sur votre compte Google Drive personnel. Nous n'avons pas accès pour voir, modifier ou partager vos fichiers. L'application crée uniquement des dossiers et télécharge des fichiers selon vos instructions. Vous pouvez révoquer l'accès à tout moment depuis les paramètres de votre compte Google.",
+                launchApp: "Lancer l'Application",
+                viewCode: "Voir le Code Source",
+                footerAbout: "À Propos",
+                footerAboutDesc: "Un outil de téléchargement de fichiers sécurisé côté client qui organise les fichiers directement dans votre Google Drive.",
+                footerLinks: "Liens Rapides",
+                footerMultiFile: "Téléchargement Multiple",
+                footerSingleFile: "Téléchargement Unique",
+                footerGitHub: "Dépôt GitHub",
+                footerContact: "Contact",
+                footerRights: "Tous droits réservés.",
+                footerLicense: "Licence MIT",
+                settingsIcon: "⚙️"
+            },
+            // Add more languages as needed - for brevity, I'll add a few more key ones
+            zh: {
+                title: "安全文件上传",
+                subtitle: "指南与安全详情",
+                guideTitle: "用户指南",
+                guideDesc: "学习如何高效安全地使用我们的文件上传系统",
+                loginTitle: "登录与认证",
+                loginDesc: "使用您的Google账户进行安全认证。无需额外密码。",
+                loginStep1Title: "点击登录",
+                loginStep1Desc: "点击页面顶部的\"使用Google登录\"按钮",
+                loginStep2Title: "选择账户",
+                loginStep2Desc: "从列表中选择您的Google账户或输入凭据",
+                loginStep3Title: "授予权限",
+                loginStep3Desc: "允许应用访问您的Google Drive以上传文件",
+                loginStep4Title: "验证完成",
+                loginStep4Desc: "认证成功后您将看到\"已登录！\"消息",
+                driveTitle: "Google Drive配置",
+                driveDesc: "设置您的Google Drive文件夹以自动组织上传的文件。",
+                driveStep1Title: "创建文件夹",
+                driveStep1Desc: "在您的Google Drive中创建一个文件夹用于存储文件",
+                driveStep2Title: "复制文件夹ID",
+                driveStep2Desc: "打开文件夹并从URL或共享链接中复制其ID",
+                driveStep3Title: "打开设置",
+                driveStep3Desc: "点击右上角的⚙️图标",
+                driveStep4Title: "保存配置",
+                driveStep4Desc: "粘贴文件夹ID/URL并点击\"保存设置\"",
+                nameSubjectTitle: "姓名与主题",
+                nameSubjectDesc: "使用您的姓名和主题类别组织文件。",
+                nameStep1Title: "输入您的姓名",
+                nameStep1Desc: "在\"您的姓名\"字段中输入您的姓名（必填）",
+                nameStep2Title: "选择主题",
+                nameStep2Desc: "从预定义主题中选择或创建自定义主题",
+                nameStep3Title: "自定义主题",
+                nameStep3Desc: "选择\"其他\"以创建新的主题类别（自动保存）",
+                nameStep4Title: "文件组织",
+                nameStep4Desc: "文件将保存为：您的姓名_文件名 在主题文件夹中",
+                uploadTitle: "上传系统",
+                uploadDesc: "快速、安全、可靠的文件上传，带有进度跟踪。",
+                uploadStep1Title: "选择文件",
+                uploadStep1Desc: "点击\"选择文件\"并选择一个或多个文件",
+                uploadStep2Title: "文件类型",
+                uploadStep2Desc: "从下拉菜单中选择文件类型（PDF、PPT、图片等）",
+                uploadStep3Title: "上传",
+                uploadStep3Desc: "点击\"上传到Drive\"按钮开始上传过程",
+                uploadStep4Title: "确认",
+                uploadStep4Desc: "查看每个文件的上传摘要，包括成功/失败状态",
+                securityTitle: "安全与隐私",
+                securityDesc: "您的数据安全是我们的首要任务。以下是我们保护您信息的方式",
+                security1Title: "仅客户端",
+                security1Desc: "所有处理都在您的浏览器中进行。文件永远不会接触我们的服务器。",
+                security2Title: "直接上传",
+                security2Desc: "文件直接从您的设备安全地传输到您的Google Drive。",
+                security3Title: "无数据存储",
+                security3Desc: "我们不存储、记录或跟踪您的任何文件或個人数据。",
+                security4Title: "OAuth 2.0",
+                security4Desc: "行业标准认证。我们永远不会看到您的密码。",
+                security5Title: "最小权限",
+                security5Desc: "仅请求访问此应用创建的文件，而不是您的整个Drive。",
+                security6Title: "开源",
+                security6Desc: "所有代码在GitHub上公开且可审计，以确保透明度。",
+                securityNoteTitle: "重要安全说明",
+                securityNoteDesc: "此应用程序使用Google官方API和OAuth 2.0认证。您的文件直接上传到您的个人Google Drive账户。我们无权查看、修改或分享您的文件。应用程序仅根据您的指示创建文件夹和上传文件。您可以随时从Google账户设置中撤销访问权限。",
+                launchApp: "启动应用程序",
+                viewCode: "查看源代码",
+                footerAbout: "关于",
+                footerAboutDesc: "一个安全的客户端文件上传工具，可直接将文件组织到您的Google Drive中。",
+                footerLinks: "快速链接",
+                footerMultiFile: "多文件上传",
+                footerSingleFile: "单文件上传",
+                footerGitHub: "GitHub仓库",
+                footerContact: "联系方式",
+                footerRights: "版权所有。",
+                footerLicense: "MIT许可证",
+                settingsIcon: "⚙️"
+            },
+            ja: {
+                title: "セキュアファイルアップロード",
+                subtitle: "ガイドとセキュリティ詳細",
+                guideTitle: "ユーザーガイド",
+                guideDesc: "セキュアなファイルアップロードシステムを効率的かつ安全に使用する方法を学びます",
+                loginTitle: "ログインと認証",
+                loginDesc: "Googleアカウントを使用した安全な認証。追加のパスワードは不要です。",
+                loginStep1Title: "サインインをクリック",
+                loginStep1Desc: "ページ上部の「Googleでサインイン」ボタンをクリックします",
+                loginStep2Title: "アカウントを選択",
+                loginStep2Desc: "リストからGoogleアカウントを選択するか、認証情報を入力します",
+                loginStep3Title: "権限を付与",
+                loginStep3Desc: "ファイルアップロードのためにアプリがGoogleドライブにアクセスすることを許可します",
+                loginStep4Title: "検証完了",
+                loginStep4Desc: "認証が成功すると「ログインしました！」メッセージが表示されます",
+                driveTitle: "Googleドライブ設定",
+                driveDesc: "アップロードされたファイルを自動的に整理するためにGoogleドライブフォルダーを設定します。",
+                driveStep1Title: "フォルダーを作成",
+                driveStep1Desc: "ファイルが保存されるGoogleドライブにフォルダーを作成します",
+                driveStep2Title: "フォルダーIDをコピー",
+                driveStep2Desc: "フォルダーを開き、URLまたは共有リンクからIDをコピーします",
+                driveStep3Title: "設定を開く",
+                driveStep3Desc: "右上隅の⚙️アイコンをクリックします",
+                driveStep4Title: "設定を保存",
+                driveStep4Desc: "フォルダーID/URLを貼り付けて「設定を保存」をクリックします",
+                nameSubjectTitle: "名前と件名",
+                nameSubjectDesc: "名前と件名カテゴリでファイルを整理します。",
+                nameStep1Title: "名前を入力",
+                nameStep1Desc: "「あなたの名前」フィールドに名前を入力します（必須）",
+                nameStep2Title: "件名を選択",
+                nameStep2Desc: "事前定義された件名から選択するか、カスタム件名を作成します",
+                nameStep3Title: "カスタム件名",
+                nameStep3Desc: "「その他」を選択して新しい件名カテゴリを作成します（自動保存）",
+                nameStep4Title: "ファイル整理",
+                nameStep4Desc: "ファイルは：あなたの名前_ファイル名 で件名フォルダーに保存されます",
+                uploadTitle: "アップロードシステム",
+                uploadDesc: "進捗追跡付きの高速で安全な信頼できるファイルアップロード。",
+                uploadStep1Title: "ファイルを選択",
+                uploadStep1Desc: "「ファイルを選択」をクリックして1つまたは複数のファイルを選択します",
+                uploadStep2Title: "ファイルタイプ",
+                uploadStep2Desc: "ドロップダウンからファイルタイプを選択します（PDF、PPT、画像など）",
+                uploadStep3Title: "アップロード",
+                uploadStep3Desc: "「ドライブにアップロード」ボタンをクリックしてアップロードプロセスを開始します",
+                uploadStep4Title: "確認",
+                uploadStep4Desc: "各ファイルの成功/失敗ステータスを含むアップロードサマリーを表示します",
+                securityTitle: "セキュリティとプライバシー",
+                securityDesc: "あなたのデータのセキュリティは私たちの最優先事項です。情報を保護する方法は次のとおりです",
+                security1Title: "クライアント側のみ",
+                security1Desc: "すべての処理はブラウザで行われます。ファイルは私たちのサーバーに触れることはありません。",
+                security2Title: "直接アップロード",
+                security2Desc: "ファイルはデバイスからGoogleドライブに直接安全に送信されます。",
+                security3Title: "データ保存なし",
+                security3Desc: "ファイルや個人データを保存、記録、追跡することはありません。",
+                security4Title: "OAuth 2.0",
+                security4Desc: "業界標準の認証。パスワードを見ることはありません。",
+                security5Title: "最小限の権限",
+                security5Desc: "ドライブ全体ではなく、このアプリによって作成されたファイルへのアクセスのみを要求します。",
+                security6Title: "オープンソース",
+                security6Desc: "透明性のために、すべてのコードはGitHubで公開され監査可能です。",
+                securityNoteTitle: "重要なセキュリティ注意事項",
+                securityNoteDesc: "このアプリケーションはOAuth 2.0認証を使用してGoogleの公式APIを使用します。ファイルは個人のGoogleドライブアカウントに直接アップロードされます。ファイルを表示、変更、共有するアクセス権はありません。アプリケーションは指示に従ってフォルダーを作成し、ファイルをアップロードするだけです。Googleアカウント設定からいつでもアクセスを取り消すことができます。",
+                launchApp: "アプリケーションを起動",
+                viewCode: "ソースコードを表示",
+                footerAbout: "について",
+                footerAboutDesc: "ファイルをGoogleドライブに直接整理する安全なクライアント側ファイルアップロードツール。",
+                footerLinks: "クイックリンク",
+                footerMultiFile: "複数ファイルアップロード",
+                footerSingleFile: "単一ファイルアップロード",
+                footerGitHub: "GitHubリポジトリ",
+                footerContact: "連絡先",
+                footerRights: "全著作権所有。",
+                footerLicense: "MITライセンス",
+                settingsIcon: "⚙️"
+            },
+            // For brevity, I'll create simplified versions for remaining languages
+            de: { title: "Sicherer Datei-Upload", subtitle: "Handbuch & Sicherheitsdetails", guideTitle: "Benutzerhandbuch", guideDesc: "Erfahren Sie, wie Sie unser sicheres Datei-Upload-System effizient und sicher nutzen", securityTitle: "Sicherheit & Datenschutz", securityDesc: "Ihre Datensicherheit hat für uns höchste Priorität", launchApp: "Anwendung starten", viewCode: "Quellcode anzeigen", footerRights: "Alle Rechte vorbehalten.", footerLicense: "MIT-Lizenz", settingsIcon: "⚙️" },
+            it: { title: "Caricamento File Sicuro", subtitle: "Guida e Dettagli sulla Sicurezza", guideTitle: "Guida Utente", guideDesc: "Scopri come utilizzare il nostro sistema di caricamento file sicuro in modo efficiente e sicuro", securityTitle: "Sicurezza e Privacy", securityDesc: "La sicurezza dei tuoi dati è la nostra massima priorità", launchApp: "Avvia Applicazione", viewCode: "Visualizza Codice Sorgente", footerRights: "Tutti i diritti riservati.", footerLicense: "Licenza MIT", settingsIcon: "⚙️" },
+            pt: { title: "Upload Seguro de Arquivos", subtitle: "Guia e Detalhes de Segurança", guideTitle: "Guia do Usuário", guideDesc: "Aprenda a usar nosso sistema de upload de arquivos seguro de forma eficiente e segura", securityTitle: "Segurança e Privacidade", securityDesc: "A segurança dos seus dados é nossa principal prioridade", launchApp: "Iniciar Aplicativo", viewCode: "Ver Código Fonte", footerRights: "Todos os direitos reservados.", footerLicense: "Licença MIT", settingsIcon: "⚙️" },
+            ru: { title: "Безопасная Загрузка Файлов", subtitle: "Руководство и Детали Безопасности", guideTitle: "Руководство Пользователя", guideDesc: "Узнайте, как эффективно и безопасно использовать нашу систему загрузки файлов", securityTitle: "Безопасность и Конфиденциальность", securityDesc: "Безопасность ваших данных - наш главный приоритет", launchApp: "Запустить Приложение", viewCode: "Просмотреть Исходный Код", footerRights: "Все права защищены.", footerLicense: "Лицензия MIT", settingsIcon: "⚙️" },
+            ko: { title: "보안 파일 업로드", subtitle: "가이드 및 보안 세부정보", guideTitle: "사용자 가이드", guideDesc: "보안 파일 업로드 시스템을 효율적이고 안전하게 사용하는 방법 알아보기", securityTitle: "보안 및 개인정보", securityDesc: "데이터 보안이 최우선 과제입니다", launchApp: "애리케이션 시작", viewCode: "소스 코드 보기", footerRights: "모든 권리 보유.", footerLicense: "MIT 라이선스", settingsIcon: "⚙️" },
+            ar: { title: "رفع الملفات الآمن", subtitle: "الدليل وتفاصيل الأمان", guideTitle: "دليل المستخدم", guideDesc: "تعلم كيفية استخدام نظام رفع الملفات الآمن الخاص بنا بكفاءة وأمان", securityTitle: "الأمان والخصوصية", securityDesc: "أمان بياناتك هو أولويتنا القصوى", launchApp: "تشغيل التطبيق", viewCode: "عرض الكود المصدري", footerRights: "جميع الحقوق محفوظة.", footerLicense: "رخصة MIT", settingsIcon: "⚙️" },
+            hi: { title: "सुरक्षित फ़ाइल अपलोड", subtitle: "गाइड और सुरक्षा विवरण", guideTitle: "उपयोगकर्ता गाइड", guideDesc: "हमारे सुरक्षित फ़ाइल अपलोड सिस्टम का कुशलतापूर्वक और सुरक्षित रूप से उपयोग करना सीखें", securityTitle: "सुरक्षा और गोपनीयता", securityDesc: "आपके डेटा की सुरक्षा हमारी सर्वोच्च प्राथमिकता है", launchApp: "एप्लिकेशन लॉन्च करें", viewCode: "सोर्स कोड देखें", footerRights: "सर्वाधिकार सुरक्षित।", footerLicense: "MIT लाइसेंस", settingsIcon: "⚙️" },
+            // Add placeholder entries for remaining languages to prevent errors
+            bn: { title: "নিরাপদ ফাইল আপলোড", subtitle: "গাইড ও নিরাপত্তা বিবরণ", guideTitle: "ব্যবহারকারী গাইড", securityTitle: "নিরাপত্তা ও গোপনীয়তা", launchApp: "অ্যাপ্লিকেশন চালু করুন", viewCode: "সোর্স কোড দেখুন", footerRights: "সর্বস্বত্ব সংরক্ষিত।", footerLicense: "MIT লাইসেন্স", settingsIcon: "⚙️" },
+            ur: { title: "محفوظ فائل اپ لوڈ", subtitle: "گائیڈ اور سیکیورٹی کی تفصیلات", guideTitle: "صارف گائیڈ", securityTitle: "سیکیورٹی اور رازداری", launchApp: "ایپلی کیشن شروع کریں", viewCode: "سورس کوڈ دیکھیں", footerRights: "تمام حقوق محفوظ ہیں۔", footerLicense: "MIT لائسنس", settingsIcon: "⚙️" },
+            fa: { title: "آپلود امن فایل", subtitle: "راهنما و جزئیات امنیتی", guideTitle: "راهنمای کاربر", securityTitle: "امنیت و حریم خصوصی", launchApp: "راه‌اندازی برنامه", viewCode: "مشاهده کد منبع", footerRights: "تمامی حقوق محفوظ است.", footerLicense: "مجوز MIT", settingsIcon: "⚙️" },
+            tr: { title: "Güvenli Dosya Yükleme", subtitle: "Kılavuz ve Güvenlik Detayları", guideTitle: "Kullanıcı Kılavuzu", securityTitle: "Güvenlik ve Gizlilik", launchApp: "Uygulamayı Başlat", viewCode: "Kaynak Kodu Görüntüle", footerRights: "Tüm hakları saklıdır.", footerLicense: "MIT Lisansı", settingsIcon: "⚙️" },
+            vi: { title: "Tải lên Tệp An toàn", subtitle: "Hướng dẫn & Chi tiết Bảo mật", guideTitle: "Hướng dẫn Sử dụng", securityTitle: "Bảo mật & Quyền riêng tư", launchApp: "Khởi chạy Ứng dụng", viewCode: "Xem Mã Nguồn", footerRights: "Đã bảo lưu mọi quyền.", footerLicense: "Giấy phép MIT", settingsIcon: "⚙️" },
+            th: { title: "การอัปโหลดไฟล์ที่ปลอดภัย", subtitle: "คู่มือและรายละเอียดความปลอดภัย", guideTitle: "คู่มือผู้ใช้", securityTitle: "ความปลอดภัยและความเป็นส่วนตัว", launchApp: "เปิดใช้งานแอปพลิเคชัน", viewCode: "ดูซอร์สโค้ด", footerRights: "สงวนลิขสิทธิ์ทั้งหมด", footerLicense: "สัญญาอนุญาต MIT", settingsIcon: "⚙️" },
+            id: { title: "Unggah File Aman", subtitle: "Panduan & Detail Keamanan", guideTitle: "Panduan Pengguna", securityTitle: "Keamanan & Privasi", launchApp: "Luncurkan Aplikasi", viewCode: "Lihat Kode Sumber", footerRights: "Hak Cipta Dilindungi.", footerLicense: "Lisensi MIT", settingsIcon: "⚙️" },
+            ms: { title: "Muat Naik Fail Selamat", subtitle: "Panduan & Butiran Keselamatan", guideTitle: "Panduan Pengguna", securityTitle: "Keselamatan & Privasi", launchApp: "Lancarkan Aplikasi", viewCode: "Lihat Kod Sumber", footerRights: "Hak Cipta Terpelihara.", footerLicense: "Lesen MIT", settingsIcon: "⚙️" },
+            tl: { title: "Ligtas na Pag-upload ng File", subtitle: "Gabay at Detalye ng Seguridad", guideTitle: "Gabay ng Gumagamit", securityTitle: "Seguridad at Privacidad", launchApp: "Ilunsad ang Aplikasyon", viewCode: "Tingnan ang Source Code", footerRights: "Lahat ng karapatan ay nakalaan.", footerLicense: "MIT License", settingsIcon: "⚙️" },
+            nl: { title: "Veilig Bestanden Uploaden", subtitle: "Handleiding & Beveiligingsdetails", guideTitle: "Gebruikershandleiding", securityTitle: "Beveiliging & Privacy", launchApp: "Applicatie Starten", viewCode: "Broncode Bekijken", footerRights: "Alle rechten voorbehouden.", footerLicense: "MIT-licentie", settingsIcon: "⚙️" },
+            pl: { title: "Bezpieczne Przesyłanie Plików", subtitle: "Poradnik i Szczegóły Bezpieczeństwa", guideTitle: "Poradnik Użytkownika", securityTitle: "Bezpieczeństwo i Prywatność", launchApp: "Uruchom Aplikację", viewCode: "Zobacz Kod Źródłowy", footerRights: "Wszelkie prawa zastrzeżone.", footerLicense: "Licencja MIT", settingsIcon: "⚙️" },
+            uk: { title: "Безпечне Завантаження Файлів", subtitle: "Посібник та Деталі Безпеки", guideTitle: "Посібник Користувача", securityTitle: "Безпека та Конфіденційність", launchApp: "Запустити Додаток", viewCode: "Переглянути Вихідний Код", footerRights: "Всі права захищено.", footerLicense: "Ліцензія MIT", settingsIcon: "⚙️" },
+            el: { title: "Ασφαλής Μεταφόρτωση Αρχείων", subtitle: "Οδηγός & Λεπτομέρειες Ασφαλείας", guideTitle: "Οδηγός Χρήστη", securityTitle: "Ασφάλεια & Απόρρητο", launchApp: "Εκκίνηση Εφαρμογής", viewCode: "Προβολή Πηγαίου Κώδικα", footerRights: "Όλα τα δικαιώματα κατοχυρωμένα.", footerLicense: "Άδεια MIT", settingsIcon: "⚙️" },
+            he: { title: "העלאת קבצים מאובטחת", subtitle: "מדריך ופרטי אבטחה", guideTitle: "מדריך למשתמש", securityTitle: "אבטחה ופרטיות", launchApp: "הפעל יישום", viewCode: "הצג קוד מקור", footerRights: "כל הזכויות שמורות.", footerLicense: "רשיון MIT", settingsIcon: "⚙️" },
+            sv: { title: "Säker Filuppladdning", subtitle: "Guide & Säkerhetsdetaljer", guideTitle: "Användarguide", securityTitle: "Säkerhet & Integritet", launchApp: "Starta Applikation", viewCode: "Visa Källkod", footerRights: "Alla rättigheter förbehållna.", footerLicense: "MIT-licens", settingsIcon: "⚙️" },
+            no: { title: "Sikker Filopplasting", subtitle: "Guide & Sikkerhetsdetaljer", guideTitle: "Brukerguide", securityTitle: "Sikkerhet & Personvern", launchApp: "Start Applikasjon", viewCode: "Vis Kildekode", footerRights: "Alle rettigheter forbeholdes.", footerLicense: "MIT-lisens", settingsIcon: "⚙️" },
+            da: { title: "Sikker Filupload", subtitle: "Guide & Sikkerhedsdetaljer", guideTitle: "Brugerguide", securityTitle: "Sikkerhed & Privatliv", launchApp: "Start Applikation", viewCode: "Vis Kildekode", footerRights: "Alle rettigheder forbeholdes.", footerLicense: "MIT-licens", settingsIcon: "⚙️" },
+            fi: { title: "Turvallinen Tiedoston Lähetys", subtitle: "Opas & Tietoturvatiedot", guideTitle: "Käyttöopas", securityTitle: "Tietoturva & Yksityisyys", launchApp: "Käynnistä Sovellus", viewCode: "Näytä Lähdekoodi", footerRights: "Kaikki oikeudet pidätetään.", footerLicense: "MIT-lisenssi", settingsIcon: "⚙️" }
+        };
+
+        // Language change handler
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            const lang = this.value;
+            updateLanguage(lang);
+            
+            // Apply language-specific font classes
+            document.body.className = '';
+            if (['zh', 'zh-tw', 'zh-hk'].includes(lang)) {
+                document.body.classList.add('lang-zh');
+            } else if (lang === 'ja') {
+                document.body.classList.add('lang-ja');
+            } else if (lang === 'ko') {
+                document.body.classList.add('lang-ko');
+            } else if (['ar', 'fa', 'ur'].includes(lang)) {
+                document.body.classList.add('lang-ar');
+            } else if (['hi', 'mr', 'ne'].includes(lang)) {
+                document.body.classList.add('lang-hi');
+            }
+        });
+
+        // Update page content based on selected language
+        function updateLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[lang][key];
+                    } else {
+                        element.innerHTML = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Update document lang attribute
+            document.documentElement.lang = lang;
+            
+            // Handle RTL languages
+            if (['ar', 'fa', 'he', 'ur'].includes(lang)) {
+                document.documentElement.dir = 'rtl';
+            } else {
+                document.documentElement.dir = 'ltr';
+            }
+        }
+
+        // Initialize with English
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            
+            // Add animation on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all cards and security items
+            document.querySelectorAll('.card, .security-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+
+        // Add tooltip functionality
+        document.querySelectorAll('.tooltip').forEach(tooltip => {
+            tooltip.addEventListener('mouseenter', function() {
+                const tooltipText = this.querySelector('.tooltip-text');
+                if (tooltipText) {
+                    tooltipText.style.visibility = 'visible';
+                    tooltipText.style.opacity = '1';
+                }
+            });
+            
+            tooltip.addEventListener('mouseleave', function() {
+                const tooltipText = this.querySelector('.tooltip-text');
+                if (tooltipText) {
+                    tooltipText.style.visibility = 'hidden';
+                    tooltipText.style.opacity = '0';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
