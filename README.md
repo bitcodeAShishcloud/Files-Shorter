@@ -1,5 +1,5 @@
 # 📁 Secure File Upload - Multi-File Version
-[![Help Section](https://img.shields.io/badge/Live-Demo-saffron)](https://bitcodeashishcloud.github.io/Files-Shorter/help.html/)
+[![Help Section](https://img.shields.io/badge/Help-Demo-saffron)](https://bitcodeashishcloud.github.io/Files-Shorter/guide.html/)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://bitcodeashishcloud.github.io/Files-Shorter/)
 [![GitHub Pages](https://img.shields.io/badge/GitHub-Pages-blue)](https://pages.github.com/)
 [![Google Drive API](https://img.shields.io/badge/Google-Drive-red)](https://developers.google.com/drive)
@@ -9,7 +9,7 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 
 ## 🌟 Features
 
-✅ **25+ Languages Supported** - Including English, Spanish, French, German, Chinese, Japanese, Korean, Hindi, and many more( <b> [help](https://bitcodeashishcloud.github.io/Files-Shorter/help.html/) )</b> <br>
+✅ **25+ Languages Supported** - Including English, Spanish, French, German, Chinese, Japanese, Korean, Hindi, and many more( <b> [help](https://bitcodeashishcloud.github.io/Files-Shorter/guide.html/) )</b> <br>
 ✅ **Multi-File Upload** - Select and upload multiple files at once  
 ✅ **Subject-Based Organization** - Auto-creates folders by subject (Hacking, DBMS, DSA, etc.)  
 ✅ **100% Secure** - Files go directly from your browser to Google Drive  
@@ -21,12 +21,12 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 
 ## 🚀 HELP Section
 
-**🔗 Try it now:** <b>[Multi-Language Guide & Security Details Page](https://bitcodeashishcloud.github.io/Files-Shorter/help.html/)</b>
+**🔗 Try it now:** <b>[Multi-Language Guide & Security Details Page](https://bitcodeashishcloud.github.io/Files-Shorter/guide.html/)</b>
 
 
 ## 🚀 Live Demo
 
-**🔗 Try it now:** https://bitcodeashishcloud.github.io/Files-Shorter/
+**🔗 Try it now:** <b>[ENJOY Secure File Upload with Best Sorting System] (https://bitcodeashishcloud.github.io/Files-Shorter/)
 
 ## 📋 How It Works
 1. Sign in with Google → Grant Drive permissions
