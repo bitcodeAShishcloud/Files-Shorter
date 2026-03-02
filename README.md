@@ -26,7 +26,7 @@ A **secure, client-side file upload tool** that organizes and uploads multiple f
 
 ## 🚀 Live Demo
 
-**🔗 Try it now:** <b>[ENJOY Secure File Upload with Best Sorting System](https://bitcodeashishcloud.github.io/Files-Shorter/)
+**🔗 Try it now:** <b>[ENJOY Secure Files Upload with Best Sorting System](https://bitcodeashishcloud.github.io/Files-Shorter/)
 
 ## 📋 How It Works
 1. Sign in with Google → Grant Drive permissions
@@ -155,7 +155,7 @@ Files-Shorter/
 
 Prefer uploading one file at a time? Try our lightweight version:
 
-**🔗 Single-File Uploader:** https://bitcodeashishcloud.github.io/Files-Shorter/one-file/
+**🔗 Single-File Uploader:** [Secure File Upload with Best Sorting System](https://bitcodeashishcloud.github.io/Files-Shorter/one-file/)
 
 ## 👨‍💻 Author
 
