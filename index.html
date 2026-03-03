@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="oFKNfKbDUBdtaIP9wR0DdcBN0OgJIJPqvAgDOaQBEas" />
     <title>Secure File Upload - Ashish Gupta</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +14,7 @@
         h2 { text-align: center; color: var(--primary); margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: 500; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         button.submit-btn { width: 100%; padding: 12px; background-color: var(--primary); color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
         button.submit-btn:hover { background-color: #3367d6; }
         button.submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
@@ -27,6 +28,9 @@
         .success { color: green; }
         .error { color: red; }
         .file-list { text-align: left; font-size: 13px; margin-top: 10px; max-height: 150px; overflow-y: auto; }
+        .loading { color: var(--primary); font-weight: 500; }
+        .subject-tag { display: inline-block; background: var(--primary); color: white; padding: 4px 10px; border-radius: 20px; font-size: 12px; margin: 3px; }
+        .subject-container { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -45,23 +49,9 @@
             <div class="form-group">
                 <label>Subject</label>
                 <select id="subjectSelect" onchange="checkOther(this)" required>
-                    <option value="" disabled selected>Select Subject</option>
-                    <option value="Hacking">Hacking</option>
-                    <option value="Ethical Hacking">Ethical Hacking</option>
-                    <option value="DBMS">DBMS</option>
-                    <option value="AICE">AICE</option>
-                    <option value="CTI">CTI</option>
-                    <option value="DSA">DSA</option>
-                    <option value="Web Technology">Web Technology</option>
-                    <option value="UPSC">UPSC</option>
-                    <option value="English">English</option>
-                    <option value="Mathematics">Mathematics</option>
-                    <option value="Science">Science</option>
-                    <option value="History">History</option>
-                    <option value="Geography">Geography</option>
-                    <option value="Politics">Politics</option>
-                    <option value="Other">Other (Create New)</option>
+                    <option value="" disabled selected>Loading your subjects...</option>
                 </select>
+                <div id="subjectContainer" class="subject-container"></div>
             </div>
             <div class="form-group" id="customSubjectDiv" style="display:none;">
                 <label>Enter New Subject Name</label>
@@ -80,8 +70,7 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Select File(s) <small style="color:#666;font-weight:normal">(Hold Ctrl/Cmd to select multiple)</small></label>
-                <!-- ✅ MULTI-FILE: Added 'multiple' attribute -->
+                <label>Select File(s) <small style="color:#666;font-weight:normal">(Hold Ctrl/Cmd for multiple)</small></label>
                 <input type="file" id="fileInput" multiple required>
                 <div id="fileNames" class="file-list" style="display:none;"></div>
             </div>
@@ -96,7 +85,7 @@
             <div class="form-group">
                 <label>Google Drive Folder ID / URL</label>
                 <input type="text" id="driveFolderId" placeholder="Paste Folder URL or ID here">
-                <small style="color: #666;">Only the owner needs to set this.</small>
+                <small style="color: #666;">This is where all your files will be stored.</small>
             </div>
             <button class="submit-btn" onclick="saveSettings()">Save Settings</button>
         </div>
@@ -117,24 +106,120 @@
         const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
         const SCOPES = 'https://www.googleapis.com/auth/drive.file';
         let tokenClient, gapiInited = false, gisInited = false;
+        let userSubjects = [];
+        let subjectsFileId = null;
 
-        // --- LOCAL STORAGE FOR SUBJECTS ---
-        function loadSubjects() {
-            const saved = localStorage.getItem('customSubjects');
-            if (saved) {
-                const subjects = JSON.parse(saved);
-                const select = document.getElementById('subjectSelect');
-                select.remove(select.length - 1); 
-                subjects.forEach(sub => {
-                    const opt = document.createElement('option');
-                    opt.value = sub; opt.innerText = sub; select.appendChild(opt);
+        // --- LOAD SUBJECTS FROM GOOGLE DRIVE ---
+        async function loadSubjectsFromDrive() {
+            const folderId = localStorage.getItem('driveFolderId');
+            if (!folderId) return;
+
+            try {
+                const token = gapi.client.getToken();
+                if (!token) return;
+
+                // Search for subjects.json file
+                const response = await gapi.client.drive.files.list({
+                    q: `'${folderId}' in parents and name='subjects.json' and mimeType='application/json' and trashed=false`,
+                    fields: 'files(id, name)',
+                    spaces: 'drive'
                 });
-                const otherOpt = document.createElement('option');
-                otherOpt.value = "Other"; otherOpt.innerText = "Other (Create New)";
-                select.appendChild(otherOpt);
+
+                const files = response.result?.files || [];
+                
+                if (files.length > 0) {
+                    subjectsFileId = files[0].id;
+                    // Download the file content
+                    const downloadResponse = await fetch(`https://www.googleapis.com/drive/v3/files/${subjectsFileId}?alt=media`, {
+                        headers: { 'Authorization': 'Bearer ' + token.access_token }
+                    });
+                    const data = await downloadResponse.json();
+                    userSubjects = data.subjects || [];
+                } else {
+                    userSubjects = [];
+                }
+                
+                updateSubjectDropdown();
+            } catch (err) {
+                console.error("Error loading subjects:", err);
+                userSubjects = [];
+                updateSubjectDropdown();
             }
         }
-        loadSubjects();
+
+        // --- SAVE SUBJECTS TO GOOGLE DRIVE ---
+        async function saveSubjectsToDrive() {
+            const folderId = localStorage.getItem('driveFolderId');
+            if (!folderId) return;
+
+            try {
+                const token = gapi.client.getToken();
+                if (!token) return;
+
+                const fileContent = JSON.stringify({ subjects: userSubjects, updated: new Date().toISOString() });
+                
+                if (subjectsFileId) {
+                    // Update existing file
+                    const form = new FormData();
+                    form.append('metadata', new Blob([JSON.stringify({ name: 'subjects.json' })], { type: 'application/json' }));
+                    form.append('file', new Blob([fileContent], { type: 'application/json' }));
+                    
+                    await fetch(`https://www.googleapis.com/upload/drive/v3/files/${subjectsFileId}?uploadType=multipart`, {
+                        method: 'PATCH',
+                        headers: { 'Authorization': 'Bearer ' + token.access_token },
+                        body: form
+                    });
+                } else {
+                    // Create new file
+                    const form = new FormData();
+                    const metadata = { name: 'subjects.json', mimeType: 'application/json', parents: [folderId] };
+                    form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+                    form.append('file', new Blob([fileContent], { type: 'application/json' }));
+                    
+                    const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                        method: 'POST',
+                        headers: { 'Authorization': 'Bearer ' + token.access_token },
+                        body: form
+                    });
+                    const result = await response.json();
+                    subjectsFileId = result.id;
+                }
+            } catch (err) {
+                console.error("Error saving subjects:", err);
+            }
+        }
+
+        // --- UPDATE DROPDOWN ---
+        function updateSubjectDropdown() {
+            const select = document.getElementById('subjectSelect');
+            select.innerHTML = '<option value="" disabled selected>Select Subject</option>';
+            
+            userSubjects.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub;
+                opt.innerText = sub;
+                select.appendChild(opt);
+            });
+            
+            const otherOpt = document.createElement('option');
+            otherOpt.value = "Other";
+            otherOpt.innerText = "+ Create New Subject";
+            select.appendChild(otherOpt);
+
+            // Show tags
+            const container = document.getElementById('subjectContainer');
+            if (userSubjects.length > 0) {
+                container.innerHTML = '<small style="color:#666">Your subjects:</small><br>';
+                userSubjects.forEach(sub => {
+                    const tag = document.createElement('span');
+                    tag.className = 'subject-tag';
+                    tag.innerText = sub;
+                    container.appendChild(tag);
+                });
+            } else {
+                container.innerHTML = '<small style="color:#666">No subjects yet. Create your first one!</small>';
+            }
+        }
 
         // --- UI LOGIC ---
         function checkOther(select) {
@@ -148,7 +233,6 @@
             }
         }
 
-        // ✅ Show selected file names
         document.getElementById('fileInput').addEventListener('change', function(e) {
             const fileNamesDiv = document.getElementById('fileNames');
             const files = e.target.files;
@@ -172,7 +256,7 @@
             let id = url;
             if(url.includes('/folders/')) { id = url.split('/folders/')[1].split('?')[0].trim(); }
             localStorage.setItem('driveFolderId', id);
-            alert('✅ Settings Saved!');
+            alert('✅ Settings Saved! Now login to load your subjects.');
             closeSettings();
         }
 
@@ -180,13 +264,15 @@
         function gapiLoaded() { gapi.load('client', initializeGapiClient); }
         async function initializeGapiClient() {
             await gapi.client.init({ apiKey: API_KEY, discoveryDocs: [DISCOVERY_DOC] });
-            gapiInited = true; maybeEnableButtons();
+            gapiInited = true;
+            maybeEnableButtons();
         }
         function gisLoaded() {
             tokenClient = google.accounts.oauth2.initTokenClient({
                 client_id: CLIENT_ID, scope: SCOPES, callback: '',
             });
-            gisInited = true; maybeEnableButtons();
+            gisInited = true;
+            maybeEnableButtons();
         }
         function maybeEnableButtons() {
             if (gapiInited && gisInited) {
@@ -195,6 +281,8 @@
                     document.getElementById('login-btn').style.display = 'none';
                     document.getElementById('user-name').style.display = 'inline';
                     document.getElementById('submitBtn').disabled = false;
+                    // Load subjects after login
+                    loadSubjectsFromDrive();
                 }
             }
         }
@@ -204,6 +292,8 @@
                 document.getElementById('login-btn').style.display = 'none';
                 document.getElementById('user-name').style.display = 'inline';
                 document.getElementById('submitBtn').disabled = false;
+                // Load subjects after login
+                loadSubjectsFromDrive();
             };
             if (gapi.client.getToken() === null) {
                 tokenClient.requestAccessToken({prompt: 'consent'});
@@ -213,11 +303,12 @@
         }
         window.onload = function() { if (gapiInited && gisInited) maybeEnableButtons(); };
 
-        // --- UPLOAD LOGIC - MULTI-FILE SUPPORT ---
+        // --- UPLOAD LOGIC ---
         async function handleUpload(e) {
             e.preventDefault();
             const statusDiv = document.getElementById('status');
-            statusDiv.innerHTML = ""; statusDiv.className = "";
+            statusDiv.innerHTML = "⏳ Processing...";
+            statusDiv.className = "";
             try {
                 const pName = document.getElementById('pName').value.trim();
                 let subject = document.getElementById('subjectSelect').value;
@@ -231,9 +322,15 @@
                     subject = document.getElementById('customSubject').value.trim();
                     if (!subject) { statusDiv.innerHTML = "❌ Please enter a subject name."; statusDiv.className = "error"; return; }
                     subject = subject.charAt(0).toUpperCase() + subject.slice(1);
-                    let savedSubjects = JSON.parse(localStorage.getItem('customSubjects') || "[]");
-                    if(!savedSubjects.includes(subject)) { savedSubjects.push(subject); localStorage.setItem('customSubjects', JSON.stringify(savedSubjects)); }
-                } else { subject = subject.charAt(0).toUpperCase() + subject.slice(1); }
+                    // Add to subjects list
+                    if(!userSubjects.includes(subject)) {
+                        userSubjects.push(subject);
+                        updateSubjectDropdown();
+                        statusDiv.innerHTML = "💾 Saving new subject...";
+                        await saveSubjectsToDrive(); // Save to Drive
+                    }
+                }
+
                 const folderId = localStorage.getItem('driveFolderId');
                 if (!folderId) { statusDiv.innerHTML = "❌ Please set Drive Folder ID in Settings (⚙️) first!"; statusDiv.className = "error"; openSettings(); return; }
                 const token = gapi.client.getToken();
@@ -277,7 +374,6 @@
                     } catch (fileErr) { failCount++; results.push(`❌ ${file.name}: ${fileErr.message}`); }
                 }
 
-                // Show Summary
                 let summary = `<strong>📊 Upload Summary:</strong><br>✅ Success: ${successCount} file(s)<br>`;
                 if (failCount > 0) summary += `❌ Failed: ${failCount} file(s)<br>`;
                 summary += `<br><strong>Files:</strong><br>` + results.join('<br>');
